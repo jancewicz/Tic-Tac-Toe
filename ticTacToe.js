@@ -18,7 +18,6 @@ function gameBoard() {
             board[i].push(field);
         }
     }
-
     console.log(board);
 }
 
@@ -39,7 +38,7 @@ function field() {
 
 // Players stored in objects -> Factory function for player with own name and functions like mark with X or O the field
 
-function createPlayer() {
+function playGame() {
     const playerOne = "Player One";
     const playerTwo = "Player Two";
 
@@ -56,12 +55,38 @@ function createPlayer() {
             mark: O
         }
     ]
-    return { player };
+
+    let activePlayerIndex = 0;
+
+    function swapActivePlayer() {
+        //[players[0], players[1]] = [players[1], players[0]]; doesn't work with code below
+        activePlayerIndex = 1 - activePlayerIndex;
+    }
+
+    return { players, playerTurn: () => players[activePlayerIndex], swapActivePlayer };
 }
 
 
 
 gameBoard();
+
+const game = playGame();
+console.log(game.players)
+console.log(`TURN 1, active player is: ${game.playerTurn().name}`);
+
+console.log(`SWITCH`)
+game.swapActivePlayer();
+
+console.log(`TURN 2 active player after switch is: ${game.playerTurn().name}`)
+console.log(game.players)
+
+
+console.log(`switch number two!`);
+game.swapActivePlayer();
+
+console.log(`TURN 3 active player is: ${game.playerTurn().name}`);
+console.log(game.players);
+
 
 // Object to control the game itself: start the game with all fields clear, turns, win / lose / tie,
 
