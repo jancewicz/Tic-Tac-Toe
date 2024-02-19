@@ -11,27 +11,57 @@ function gameBoard() {
     const rows = 3;
     const columns = 3;
     const board = []
+
+    for (let i = 0; i < rows; i++) {
+        board[i] = [];
+        for (let j = 0; j < columns; j++) {
+            board[i].push(field);
+        }
+    }
+
+    console.log(board);
 }
 
 
 function field() {
     let value = 0;
 
-    const placePlayerMark = (player) => value = player;
+    const placePlayerMark = (player) => {
+        value = player
+    };
 
+    function getValue() {
+        return value;
+    }
+
+    return { placePlayerMark, getValue };
 }
 
 // Players stored in objects -> Factory function for player with own name and functions like mark with X or O the field
 
-function createPlayer(name) {
+function createPlayer() {
+    const playerOne = "Player One";
+    const playerTwo = "Player Two";
 
-    const pickMark = () => {
-        const X = "X";
-        const O = "O";
-    }
+    const X = 1;
+    const O = 2;
 
-    return { name, pickMark };
+    const players = [
+        {
+            name: playerOne,
+            mark: X
+        },
+        {
+            name: playerTwo,
+            mark: O
+        }
+    ]
+    return { player };
 }
+
+
+
+gameBoard();
 
 // Object to control the game itself: start the game with all fields clear, turns, win / lose / tie,
 
