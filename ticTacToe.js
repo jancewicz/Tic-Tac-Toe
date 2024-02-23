@@ -5,34 +5,34 @@ function gameBoard() {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i].push(field);
+            board[i].push(field());
         }
     }
-    return board
+    const getBoard = () => board;
+
+
+    const printBoard = () => {
+        const boardWithFieldValues = board.map((row) => row.map((field) => field.getValue()));
+        console.log(boardWithFieldValues);
+    }
+
+
+    return { getBoard, printBoard };
 }
 
 function field(player) {
     let value = 0;
 
-    const placePlayerMark = (player) => {
-        value = player.mark
+    const placePlayerMark = (activePlayer) => {
+        return value = activePlayer.mark
     };
 
-    function getValue() {
+    const getValue = () => {
         return value;
     }
 
-    function checkFieldsCurrentValue() {
-        // the way to read each of fields value (could be 0 -free, 1 - X's player mark, 2 - O's player mark)
-        board.forEach((row) => {
-            row.map((element) => console.log(field.getValue()));
-        });
-    }
-
-    return { placePlayerMark, getValue, checkFieldsCurrentValue };
+    return { placePlayerMark, getValue };
 }
-
-// Players stored in objects -> Factory function for player with own name and functions like mark with X or O the field
 
 function playGame() {
     const playerOne = "Player One";
@@ -50,21 +50,20 @@ function playGame() {
             name: playerTwo,
             mark: O
         }
-    ]
+    ];
 
     let activePlayerIndex = 0;
 
-    const activePlayerTurn = () => {
+    const activePlayer = () => {
         return players[activePlayerIndex];
     };
 
-    function swapActivePlayer() {
+    const swapActivePlayer = () => {
         activePlayerIndex = 1 - activePlayerIndex;
     };
 
-    return { players, activePlayerTurn, swapActivePlayer };
+    return { players, activePlayer, swapActivePlayer };
 }
-
 
 
 
@@ -76,17 +75,17 @@ const board = gameBoard();
 const game = playGame();
 
 
-const [playerOne, playerTwo] = game.players; // destructuring techique 
+const [playerOne, playerTwo] = game.players; // destructuring techique
 
-const gameField = field(playerOne);
+let currentPlayer = game.activePlayer().name;
+
+console.log(`Current active player is: ${currentPlayer}`);
 
 
-console.log(board)
+console.log(board.printBoard())
 
 
-board.forEach((row) => {
-    row.map((element) => console.log(gameField.getValue()));
-});
+
 
 
 // What should happen when the turn is on: 
@@ -94,8 +93,10 @@ board.forEach((row) => {
 // check if field's value is 0 (free spot)
 // use field.placePlayerMark 
 // end turn
-console.log(`TURN 1, active player is: ${game.activePlayerTurn().name}`);
-let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
+console.log(`TURN 1, active player is: ${game.activePlayer().name}`);
+//let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
+
+console.log(`The value of chosen field ([0][1]) is:  ${board[0][1].getValue()}`);
 
 
 
