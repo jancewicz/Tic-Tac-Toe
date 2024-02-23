@@ -20,7 +20,7 @@ function gameBoard() {
     return { getBoard, printBoard };
 }
 
-function field(player) {
+function field() {
     let value = 0;
 
     const placePlayerMark = (activePlayer) => {
@@ -74,18 +74,20 @@ const board = gameBoard();
 
 const game = playGame();
 
+const playBoard = board.getBoard(); // has to be here for instantiate the board
 
 const [playerOne, playerTwo] = game.players; // destructuring techique
 
-let currentPlayer = game.activePlayer().name;
 
-console.log(`Current active player is: ${currentPlayer}`);
-
-
-console.log(board.printBoard())
+console.log(`Default active player at the beginning of the game (turn 1) is: ${game.activePlayer().name}`);
 
 
 
+
+console.log(board.printBoard());
+
+console.log(`SWAP HAPPENS`)
+game.swapActivePlayer();
 
 
 // What should happen when the turn is on: 
@@ -93,60 +95,16 @@ console.log(board.printBoard())
 // check if field's value is 0 (free spot)
 // use field.placePlayerMark 
 // end turn
-console.log(`TURN 1, active player is: ${game.activePlayer().name}`);
+console.log(`TURN 1, after swap active player is: ${game.activePlayer().name}`);
+
 //let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
 
-console.log(`The value of chosen field ([0][1]) is:  ${board[0][1].getValue()}`);
+console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
 
 
+playBoard[0][1].placePlayerMark(game.activePlayer());
 
 
+console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// console.log(`TURN 1, active player is: ${game.playerTurn().name}`);
-
-// console.log(`SWITCH`)
-// game.swapActivePlayer();
-
-// console.log(`TURN 2 active player after switch is: ${game.playerTurn().name}`)
-// console.log(game.players)
-
-
-// console.log(`switch number two!`);
-// game.swapActivePlayer();
-
-// console.log(`TURN 3 active player is: ${game.playerTurn().name}`);
-// console.log(game.players);
-
-
-
-
-
-// Object to control the game itself: start the game with all fields clear, turns, win / lose / tie,
-
-// DOM should be responsible for reading and displaying the application state to the user and providing an easy-to-use
-// gateway to interact with the methods it needs to.
 
