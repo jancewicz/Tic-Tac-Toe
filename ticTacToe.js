@@ -16,8 +16,17 @@ function gameBoard() {
         console.log(boardWithFieldValues);
     }
 
+    const checkFreeField = (position) => {
+        const [row, column] = position;
+        if (board[row][column].getValue() === 0) {
+            return true;
+        } else {
+            return false;
+        }
 
-    return { getBoard, printBoard };
+    }
+
+    return { getBoard, printBoard, checkFreeField };
 }
 
 function field() {
@@ -33,6 +42,7 @@ function field() {
 
     return { placePlayerMark, getValue };
 }
+
 
 function playGame() {
     const playerOne = "Player One";
@@ -76,35 +86,59 @@ const game = playGame();
 
 const playBoard = board.getBoard(); // has to be here for instantiate the board
 
+
+let position = [1, 1];
+
+const checkIfFieldFree = board.checkFreeField(position);
+
+
+if (checkIfFieldFree) {
+    console.log(`true`)
+};
+
+
+
+
+
 const [playerOne, playerTwo] = game.players; // destructuring techique
 
 
-console.log(`Default active player at the beginning of the game (turn 1) is: ${game.activePlayer().name}`);
 
 
 
 
-console.log(board.printBoard());
-
-console.log(`SWAP HAPPENS`)
-game.swapActivePlayer();
 
 
-// What should happen when the turn is on: 
-// Choose field to place mark, 
-// check if field's value is 0 (free spot)
-// use field.placePlayerMark 
-// end turn
-console.log(`TURN 1, after swap active player is: ${game.activePlayer().name}`);
-
-//let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
-
-console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
 
 
-playBoard[0][1].placePlayerMark(game.activePlayer());
+
+// console.log(`Default active player at the beginning of the game (turn 1) is: ${game.activePlayer().name}`);
 
 
-console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
+
+
+// console.log(board.printBoard());
+
+// console.log(`SWAP HAPPENS`)
+// game.swapActivePlayer();
+
+
+// // What should happen when the turn is on:
+// // Choose field to place mark,
+// // check if field's value is 0 (free spot)
+// // use field.placePlayerMark
+// // end turn
+// console.log(`TURN 1, after swap active player is: ${game.activePlayer().name}`);
+
+// //let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
+
+// console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
+
+
+// playBoard[0][1].placePlayerMark(game.activePlayer());
+
+
+// console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
+
 
 
