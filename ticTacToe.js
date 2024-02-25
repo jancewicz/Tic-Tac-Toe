@@ -36,7 +36,8 @@ function gameBoard() {
             [1, 5, 9],
             [3, 5, 7]
         ];
-        // find a way to save to an array player marked fields, then compare every tour to winning combinations 
+
+
     }
 
 
@@ -104,8 +105,7 @@ function playGame() {
     const gameRules = ruleSet();
     const gameChart = board.getBoard();
     const [playerOne, playerTwo] = gameRules.players;
-    let endOfTurn = false;
-    let endGame = false;
+    let endGame = true;
     let turn = 1;
 
     let input = () => {
@@ -116,34 +116,47 @@ function playGame() {
 
 
     console.log("Welcome to tic tac toe game!");
-    // GAME STARTS
-    console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
-    board.printBoard();
+    while (endGame) {
+        let endOfTurn = true;
 
-    let position = input();
+        while (endOfTurn) {
+            // GAME STARTS
+            console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
+            board.printBoard();
 
-    if (board.checkFreeField(position)) {
-        const [row, column] = position;
-        gameChart[row][column].placePlayerMark(gameRules.activePlayer());
-        gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
-        console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
-    }
+            let position = input();
 
-    board.printBoard();
-    // SWAP PLAYER 
-    gameRules.swapActivePlayer();
+            if (board.checkFreeField(position)) {
+                const [row, column] = position;
+                gameChart[row][column].placePlayerMark(gameRules.activePlayer());
+                gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
+                console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
+            }
 
-    console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
-    board.printBoard();
-    position = input();
-    if (board.checkFreeField(position)) {
-        const [row, column] = position;
-        gameChart[row][column].placePlayerMark(gameRules.activePlayer());
-        gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
-        console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
+            board.printBoard();
+            // SWAP PLAYER 
+            gameRules.swapActivePlayer();
+
+            console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
+            board.printBoard();
+            position = input();
+            if (board.checkFreeField(position)) {
+                const [row, column] = position;
+                gameChart[row][column].placePlayerMark(gameRules.activePlayer());
+                gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
+                console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
+            };
+            board.printBoard();
+            console.log(`Turn ${turn} ends!`)
+            turn++;
+            endOfTurn = false;
+            break;
+        }
+        if (turn === 4) {
+            endGame === false;
+            break
+        };
     };
-    board.printBoard();
-
 }
 
 
