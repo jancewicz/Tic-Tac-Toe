@@ -36,7 +36,7 @@ function gameBoard() {
             [1, 5, 9],
             [3, 5, 7]
         ];
-        // find a way to save to an array player marked fields, then compare every tour to winning combinations
+        // find a way to save to an array player marked fields, then compare every tour to winning combinations 
     }
 
 
@@ -45,6 +45,7 @@ function gameBoard() {
 
 function field() {
     let value = 0;
+
 
     let fieldId = field.id || 1;
     field.id = fieldId + 1;
@@ -68,14 +69,19 @@ function ruleSet() {
     const X = 1;
     const O = 2;
 
+    let fieldsMarkedP1 = [];
+    let fieldsMarkedP2 = [];
+
     const players = [
         {
             name: playerOne,
-            mark: X
+            mark: X,
+            fieldsMarked: fieldsMarkedP1
         },
         {
             name: playerTwo,
-            mark: O
+            mark: O,
+            fieldsMarked: fieldsMarkedP2
         }
     ];
 
@@ -118,7 +124,9 @@ function playGame() {
 
     if (board.checkFreeField(position)) {
         const [row, column] = position;
-        gameChart[row][column].placePlayerMark(gameRules.activePlayer());;
+        gameChart[row][column].placePlayerMark(gameRules.activePlayer());
+        gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
+        console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
     }
 
     board.printBoard();
@@ -130,8 +138,11 @@ function playGame() {
     position = input();
     if (board.checkFreeField(position)) {
         const [row, column] = position;
-        gameChart[row][column].placePlayerMark(gameRules.activePlayer());;
+        gameChart[row][column].placePlayerMark(gameRules.activePlayer());
+        gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
+        console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
     };
+    board.printBoard();
 
 }
 
