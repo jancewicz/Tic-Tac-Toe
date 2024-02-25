@@ -7,14 +7,14 @@ function gameBoard() {
         for (let j = 0; j < columns; j++) {
             board[i].push(field());
         }
-    }
-    const getBoard = () => board;
+    };
 
+    const getBoard = () => board;
 
     const printBoard = () => {
         const boardWithFieldValues = board.map((row) => row.map((field) => field.getValue()));
         console.log(boardWithFieldValues);
-    }
+    };
 
     const checkFreeField = (position) => {
         const [row, column] = position;
@@ -23,8 +23,8 @@ function gameBoard() {
         } else {
             return false;
         }
+    };
 
-    }
 
     return { getBoard, printBoard, checkFreeField };
 }
@@ -36,6 +36,7 @@ function field() {
         return value = activePlayer.mark
     };
 
+
     const getValue = () => {
         return value;
     }
@@ -44,7 +45,7 @@ function field() {
 }
 
 
-function playGame() {
+function ruleSet() {
     const playerOne = "Player One";
     const playerTwo = "Player Two";
 
@@ -76,69 +77,49 @@ function playGame() {
 }
 
 
+function playGame() {
+    const board = gameBoard();
+    const gameRules = ruleSet();
+    const gameChart = board.getBoard();
+    const [playerOne, playerTwo] = gameRules.players;
+    let endOfTurn = false;
+    let endGame = false;
+    let turn = 1;
+
+    let input = () => {
+        let placeToPutMark = prompt(`${gameRules.activePlayer().name} where do You want to place your mark?`);
+        let position = JSON.parse(placeToPutMark);
+        return position = position.map(Number);
+    };
+
+
+    console.log("Welcome to tic tac toe game!");
+    console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
+    board.printBoard();
+    let position = input();
+
+    if (board.checkFreeField(position)) {
+        const [row, column] = position;
+        gameChart[row][column].placePlayerMark(gameRules.activePlayer());;
+    }
+
+    board.printBoard();
+    gameRules.swapActivePlayer();
+    console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
+    board.printBoard();
+    position = input();
+    if (board.checkFreeField(position)) {
+        const [row, column] = position;
+        gameChart[row][column].placePlayerMark(gameRules.activePlayer());;
+    };
+
+}
+
+
+const gameOn = playGame();
 
 
 
-// playground 
-const board = gameBoard();
-
-const game = playGame();
-
-const playBoard = board.getBoard(); // has to be here for instantiate the board
-
-
-let position = [1, 1];
-
-const checkIfFieldFree = board.checkFreeField(position);
-
-
-if (checkIfFieldFree) {
-    console.log(`true`)
-};
-
-
-
-
-
-const [playerOne, playerTwo] = game.players; // destructuring techique
-
-
-
-
-
-
-
-
-
-
-
-// console.log(`Default active player at the beginning of the game (turn 1) is: ${game.activePlayer().name}`);
-
-
-
-
-// console.log(board.printBoard());
-
-// console.log(`SWAP HAPPENS`)
-// game.swapActivePlayer();
-
-
-// // What should happen when the turn is on:
-// // Choose field to place mark,
-// // check if field's value is 0 (free spot)
-// // use field.placePlayerMark
-// // end turn
-// console.log(`TURN 1, after swap active player is: ${game.activePlayer().name}`);
-
-// //let input = prompt(`${game.activePlayerTurn().name} which field would you like to take?`)
-
-// console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
-
-
-// playBoard[0][1].placePlayerMark(game.activePlayer());
-
-
-// console.log(`The value of chosen field ([0][1]) is:  ${playBoard[0][1].getValue()}`);
 
 
 
