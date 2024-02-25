@@ -25,6 +25,20 @@ function gameBoard() {
         }
     };
 
+    const isWin = () => {
+        const winCombinations = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [1, 4, 7],
+            [2, 5, 8],
+            [3, 6, 9],
+            [1, 5, 9],
+            [3, 5, 7]
+        ];
+        // find a way to save to an array player marked fields, then compare every tour to winning combinations
+    }
+
 
     return { getBoard, printBoard, checkFreeField };
 }
@@ -32,16 +46,18 @@ function gameBoard() {
 function field() {
     let value = 0;
 
+    let fieldId = field.id || 1;
+    field.id = fieldId + 1;
+
     const placePlayerMark = (activePlayer) => {
         return value = activePlayer.mark
     };
-
 
     const getValue = () => {
         return value;
     }
 
-    return { placePlayerMark, getValue };
+    return { id: fieldId, placePlayerMark, getValue };
 }
 
 
@@ -94,8 +110,10 @@ function playGame() {
 
 
     console.log("Welcome to tic tac toe game!");
+    // GAME STARTS
     console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
     board.printBoard();
+
     let position = input();
 
     if (board.checkFreeField(position)) {
@@ -104,7 +122,9 @@ function playGame() {
     }
 
     board.printBoard();
+    // SWAP PLAYER 
     gameRules.swapActivePlayer();
+
     console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
     board.printBoard();
     position = input();
