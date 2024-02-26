@@ -25,7 +25,7 @@ function gameBoard() {
         }
     };
 
-    const isWin = () => {
+    const isWin = (playerMarkedFields) => {
         const winCombinations = [
             [1, 2, 3],
             [4, 5, 6],
@@ -37,16 +37,18 @@ function gameBoard() {
             [3, 5, 7]
         ];
 
+        for (let i = 0; i < winCombinations.length; i++) {
+            if (winCombinations[i][0] === playerMarkedFields[0] && winCombinations[i][1] === playerMarkedFields[1] && winCombinations[i][2] === playerMarkedFields[2]) {
+                return true;
+            }
+        };
+    };
 
-    }
-
-
-    return { getBoard, printBoard, checkFreeField };
+    return { getBoard, printBoard, checkFreeField, isWin };
 }
 
 function field() {
     let value = 0;
-
 
     let fieldId = field.id || 1;
     field.id = fieldId + 1;
@@ -132,8 +134,14 @@ function playGame() {
                 gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
                 console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
             }
+            if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
+                (console.log(`${gameRules.activePlayer().name} WINS`));
+                endGame === false;
+                break;
+            };
 
             board.printBoard();
+
             // SWAP PLAYER 
             gameRules.swapActivePlayer();
 
@@ -146,10 +154,17 @@ function playGame() {
                 gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
                 console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
             };
+            if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
+                (console.log(`${gameRules.activePlayer().name} WINS`));
+                endGame === false;
+                break
+            };
+
             board.printBoard();
             console.log(`Turn ${turn} ends!`)
             turn++;
             endOfTurn = false;
+            gameRules.swapActivePlayer();
             break;
         }
         if (turn === 4) {
