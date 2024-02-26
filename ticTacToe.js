@@ -38,7 +38,9 @@ function gameBoard() {
         ];
 
         for (let i = 0; i < winCombinations.length; i++) {
-            if (winCombinations[i][0] === playerMarkedFields[0] && winCombinations[i][1] === playerMarkedFields[1] && winCombinations[i][2] === playerMarkedFields[2]) {
+            if (winCombinations[i][0] === playerMarkedFields[0] &&
+                winCombinations[i][1] === playerMarkedFields[1] &&
+                winCombinations[i][2] === playerMarkedFields[2]) {
                 return true;
             }
         };
@@ -134,15 +136,14 @@ function playGame() {
                 gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
                 console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
             }
-            if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
+            if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
                 (console.log(`${gameRules.activePlayer().name} WINS`));
-                endGame === false;
+                endGame = false;
                 break;
             };
 
             board.printBoard();
 
-            // SWAP PLAYER 
             gameRules.swapActivePlayer();
 
             console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
@@ -154,9 +155,9 @@ function playGame() {
                 gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
                 console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
             };
-            if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
+            if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
                 (console.log(`${gameRules.activePlayer().name} WINS`));
-                endGame === false;
+                endGame = false;
                 break
             };
 
