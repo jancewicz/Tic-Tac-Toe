@@ -20,9 +20,7 @@ function gameBoard() {
         const [row, column] = position;
         if (board[row][column].getValue() === 0) {
             return true;
-        } else {
-            return false;
-        }
+        };
     };
 
     const isWin = (playerMarkedFields) => {
@@ -46,7 +44,19 @@ function gameBoard() {
         };
     };
 
-    return { getBoard, printBoard, checkFreeField, isWin };
+    /// iter over 2d array and check if there is field with value 0, if not isDraw return true;
+    const isDraw = (board) => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j].getValue() === 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    return { getBoard, printBoard, checkFreeField, isWin, isDraw };
 }
 
 function field() {
@@ -140,7 +150,12 @@ function playGame() {
                 (console.log(`${gameRules.activePlayer().name} WINS`));
                 endGame = false;
                 break;
-            };
+            } else if (board.isDraw(gameChart)) {
+                console.log("IT'S A DRAW");
+                board.printBoard();
+                endGame = false;
+                break;
+            }
 
             board.printBoard();
 
@@ -159,6 +174,11 @@ function playGame() {
                 (console.log(`${gameRules.activePlayer().name} WINS`));
                 endGame = false;
                 break
+            } else if (board.isDraw(gameChart)) {
+                console.log("IT'S A DRAW");
+                board.printBoard();
+                endGame = false;
+                break;
             };
 
             board.printBoard();
@@ -168,8 +188,8 @@ function playGame() {
             gameRules.swapActivePlayer();
             break;
         }
-        if (turn === 4) {
-            endGame === false;
+        if (endGame === false) {
+            board.printBoard();
             break
         };
     };
