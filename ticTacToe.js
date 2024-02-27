@@ -152,7 +152,6 @@ function playGame() {
                 break;
             } else if (board.isDraw(gameChart)) {
                 console.log("IT'S A DRAW");
-                board.printBoard();
                 endGame = false;
                 break;
             }
@@ -176,7 +175,6 @@ function playGame() {
                 break
             } else if (board.isDraw(gameChart)) {
                 console.log("IT'S A DRAW");
-                board.printBoard();
                 endGame = false;
                 break;
             };
