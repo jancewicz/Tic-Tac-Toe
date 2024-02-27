@@ -1,0 +1,57 @@
+@font-face {
+    font-family: "beyonders";
+    src: url("./fonts/beyonders-6yojm-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header,
+.main,
+.footer {
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    border: 3px solid black;
+    height: 10vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    margin-top: 3vh;
+    font-size: medium;
+    color: black;
+    font-family: "beyonders";
+    font-size: 35px;
+}
+
+.main {
+    height: 77vh;
+    width: 100%;
+    border: 3px solid red;
+}
+
+.footer {
+    font-family: "beyonders";
+    font-size: 10px;
+    display: flex;
+    height: 10vh;
+    width: 100%;
+    border: 3px solid blue;
+    justify-content: center;
+    align-items: end;
+}
+
+#logo {
+    height: auto;
+    width: 4vh;
+
+}
