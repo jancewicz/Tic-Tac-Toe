@@ -56,7 +56,15 @@ function gameBoard() {
         return true;
     }
 
-    return { getBoard, printBoard, checkFreeField, isWin, isDraw };
+    const resetGameBoard = () => {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                board[i][j].resetValue();
+            }
+        }
+    };
+
+    return { getBoard, printBoard, checkFreeField, isWin, isDraw, resetGameBoard };
 }
 
 function field() {
@@ -69,11 +77,15 @@ function field() {
         return value = activePlayer.mark
     };
 
+    const resetValue = () => {
+        return value = 0;
+    }
+
     const getValue = () => {
         return value;
     }
 
-    return { id: fieldId, placePlayerMark, getValue };
+    return { id: fieldId, placePlayerMark, getValue, resetValue };
 }
 
 
