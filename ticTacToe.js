@@ -1,4 +1,16 @@
 function gameBoard() {
+
+    // later change it into function (printBoard)
+    const parent = document.getElementById("board");
+    let id = 1;
+    for (let i = 0; i < 9; i++) {
+        const button = document.createElement("button");
+        button.id = `${id++}`;
+        button.classList.add("square");
+        button.setAttribute("type", "button");
+        parent.appendChild(button);
+    };
+
     const rows = 3;
     const columns = 3;
     const board = []
