@@ -126,12 +126,14 @@ function ruleSet() {
         {
             name: playerOne,
             mark: X,
-            fieldsMarked: fieldsMarkedP1
+            fieldsMarked: fieldsMarkedP1,
+            markToAppendToHTML: "X"
         },
         {
             name: playerTwo,
             mark: O,
-            fieldsMarked: fieldsMarkedP2
+            fieldsMarked: fieldsMarkedP2,
+            markToAppendToHTML: "O"
         }
     ];
 
@@ -166,6 +168,11 @@ const playGame = () => {
         console.log(typeof (position))
         if (gameChart[position - 1].field.getValue() === 0) {
             console.log("FREEE")
+            gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
+            console.log(gameChart[position - 1].field.getValue());
+            gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
+            console.log(gameRules.activePlayer().fieldsMarked);
+            document.getElementById(position).innerText = gameRules.activePlayer().markToAppendToHTML;
         }
     };
 
