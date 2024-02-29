@@ -46,22 +46,6 @@ function gameBoard() {
         return position
     }
 
-    const getBoard = () => board;
-
-    const printBoard = () => {
-        const boardWithFieldValues = board.map((row) => row.map((field) => field.getValue()));
-        console.log(boardWithFieldValues);
-    };
-
-    // this works
-    //console.log(boardButtons[0].field.getValue());
-    // because of bad position value this doesn't work
-    const checkFreeField = (position) => {
-        if (boardButtons[position - 1].field.getValue() === 0) {
-            return true;
-        };
-    };
-
     const isWin = (playerMarkedFields) => {
         const winCombinations = [
             [1, 2, 3],
@@ -103,10 +87,10 @@ function gameBoard() {
         }
     };
 
-    return { getClickedFieldId, makeBoardInDOM, saveButtonAfterClick, getBoard, printBoard, checkFreeField, isWin, isDraw, resetGameBoard, boardButtons, assignPositionToClickedSquare };
+    return { getClickedFieldId, makeBoardInDOM, saveButtonAfterClick, isWin, isDraw, resetGameBoard, boardButtons, assignPositionToClickedSquare };
 }
 
-// this function has to be converted as a button properties
+
 function field() {
     let value = 0;
 
@@ -175,16 +159,14 @@ const playGame = () => {
     const gameChart = board.boardButtons;
     displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
 
-    //board.saveButtonAfterClick();
-
-
     const handleButtonClickCallback = () => {
         console.log(`inner`);
         let position = board.assignPositionToClickedSquare();
         console.log(position)
         console.log(typeof (position))
-        console.log(gameChart[position - 1])
-
+        if (gameChart[position - 1].field.getValue() === 0) {
+            console.log("FREEE")
+        }
     };
 
     board.saveButtonAfterClick(handleButtonClickCallback);
