@@ -24,9 +24,7 @@ function gameBoard() {
 
     const handleButtonClick = (e) => {
         let currentFieldId = Number(e.target.id);
-        console.log(`The id of clicked field: ${currentFieldId} with type of: ${typeof (currentFieldId)}`)
         clickedFieldId = currentFieldId;
-        console.log(boardButtons[clickedFieldId - 1].button.field.getValue())
     }
 
     const saveButtonAfterClick = (callback) => {
@@ -59,13 +57,14 @@ function gameBoard() {
         ];
 
         for (let i = 0; i < winCombinations.length; i++) {
-            if (winCombinations[i][0] === playerMarkedFields[0] &&
-                winCombinations[i][1] === playerMarkedFields[1] &&
-                winCombinations[i][2] === playerMarkedFields[2]) {
+            if (winCombinations[i].every(function (element) {
+                return playerMarkedFields.indexOf(element) >= 0;
+            })) {
                 return true;
             }
-        };
-    };
+        }
+        return false;
+    }
 
     /// iter over 2d array and check if there is field with value 0, if not isDraw return true;
     const isDraw = (board) => {
@@ -154,42 +153,41 @@ const playGame = () => {
     const board = gameBoard();
     const gameRules = ruleSet();
     let endGame = false;
+    let endTurn = false;
     let turn = 1;
     board.makeBoardInDOM();
     const gameChart = board.boardButtons;
+    displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
 
 
     const playTurn = (position) => {
         displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
-        console.log("FREEE") // delete
         gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
-        console.log(gameChart[position - 1].field.getValue());
+
         gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
-        console.log(gameRules.activePlayer().fieldsMarked); // delete
+        gameRules.activePlayer().fieldsMarked.sort();
+        console.log(`${gameRules.activePlayer().name} has: ${gameRules.activePlayer().fieldsMarked}`); // delete
         document.getElementById(position).innerText = gameRules.activePlayer().markToAppendToHTML;
         document.getElementById(position).disabled = true;
     }
 
     const handleButtonClickCallback = () => {
-        console.log(`inner`);
         let position = board.assignPositionToClickedSquare();
-        console.log(position)
-        console.log(typeof (position))
         if (gameChart[position - 1].field.getValue() === 0) {
             playTurn(position);
-            if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
+            if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
                 console.log("WIN")
             } else if (board.isDraw(gameChart)) {
                 console.log("IT'S DRAW");
             } else {
                 gameRules.swapActivePlayer();
-                turn++;
+                displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
                 console.log("NO")
             }
         }
     };
-
     board.saveButtonAfterClick(handleButtonClickCallback);
+
 };
 const gameOn = playGame();
 
