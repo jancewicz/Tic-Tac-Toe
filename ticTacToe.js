@@ -26,7 +26,7 @@ function gameBoard() {
         let currentFieldId = Number(e.target.id);
         console.log(`The id of clicked field: ${currentFieldId} with type of: ${typeof (currentFieldId)}`)
         clickedFieldId = currentFieldId;
-        console.log(boardButtons[clickedFieldId - 1]?.button.field.getValue())
+        console.log(boardButtons[clickedFieldId - 1].button.field.getValue())
     }
 
     const saveButtonAfterClick = (callback) => {
@@ -70,10 +70,8 @@ function gameBoard() {
     /// iter over 2d array and check if there is field with value 0, if not isDraw return true;
     const isDraw = (board) => {
         for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                if (board[i][j].getValue() === 0) {
-                    return false;
-                }
+            if (board[i].field.getValue() === 0) {
+                return false;
             }
         }
         return true;
@@ -159,7 +157,18 @@ const playGame = () => {
     let turn = 1;
     board.makeBoardInDOM();
     const gameChart = board.boardButtons;
-    displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+
+
+    const playTurn = (position) => {
+        displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+        console.log("FREEE") // delete
+        gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
+        console.log(gameChart[position - 1].field.getValue());
+        gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
+        console.log(gameRules.activePlayer().fieldsMarked); // delete
+        document.getElementById(position).innerText = gameRules.activePlayer().markToAppendToHTML;
+        document.getElementById(position).disabled = true;
+    }
 
     const handleButtonClickCallback = () => {
         console.log(`inner`);
@@ -167,12 +176,16 @@ const playGame = () => {
         console.log(position)
         console.log(typeof (position))
         if (gameChart[position - 1].field.getValue() === 0) {
-            console.log("FREEE")
-            gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
-            console.log(gameChart[position - 1].field.getValue());
-            gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
-            console.log(gameRules.activePlayer().fieldsMarked);
-            document.getElementById(position).innerText = gameRules.activePlayer().markToAppendToHTML;
+            playTurn(position);
+            if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
+                console.log("WIN")
+            } else if (board.isDraw(gameChart)) {
+                console.log("IT'S DRAW");
+            } else {
+                gameRules.swapActivePlayer();
+                turn++;
+                console.log("NO")
+            }
         }
     };
 
