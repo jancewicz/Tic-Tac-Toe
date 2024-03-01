@@ -1,15 +1,40 @@
+function DOMManipulation() {
+    const boardElement = document.getElementById("board");
+    let createButton = document.createElement("button");
+    const squares = document.querySelectorAll(".square");
+    const displayTurnScreen = document.getElementById("show-player-turn");
+    const closeModalButton = document.getElementById("close-modal");
+    const resetModalButton = document.getElementById("reset-modal");
+
+    closeModalButton.addEventListener("click", function () {
+        document.getElementById("overlay").style.display = "none";
+    })
+
+    resetModalButton.addEventListener("click", () => {
+        document.getElementById("overlay").style.display = "none";
+        gameBoard().resetGameBoard(gameBoard().boardButtons);
+    })
+
+    const displayTheWinner = () => {
+        document.getElementById("overlay").style.display = "flex";
+    }
+
+    return { boardElement, createButton, squares, displayTurnScreen, displayTheWinner }
+}
+
 function gameBoard() {
-    const parent = document.getElementById("board");
+
+    const parentDiv = DOMManipulation().boardElement;
     const boardButtons = [];
     let clickedFieldId = null;
 
-    const makeBoardInDOM = () => {
+    const makeBoard = () => {
         for (let i = 0; i < 9; i++) {
-            let button = document.createElement("button");
+            let button = DOMManipulation().createButton;
             button.id = `${i + 1}`;
             button.classList.add("square");
             button.setAttribute("type", "button");
-            parent.appendChild(button);
+            parentDiv.appendChild(button);
 
             let boardField = field();
             button.field = boardField;
@@ -28,7 +53,7 @@ function gameBoard() {
     }
 
     const saveButtonAfterClick = (callback) => {
-        const buttons = document.querySelectorAll(".square");
+        const buttons = DOMManipulation().squares;
         buttons.forEach(button => {
             button.addEventListener("click", callback);
         });
@@ -66,7 +91,6 @@ function gameBoard() {
         return false;
     }
 
-    /// iter over 2d array and check if there is field with value 0, if not isDraw return true;
     const isDraw = (board) => {
         for (let i = 0; i < board.length; i++) {
             if (board[i].field.getValue() === 0) {
@@ -77,16 +101,15 @@ function gameBoard() {
     };
 
     const resetGameBoard = () => {
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board[i].length; j++) {
-                board[i][j].resetValue();
-            }
+        for (let i = 0; i < boardButtons.length; i++) {
+            boardButtons[i].field.resetValue();
+            document.getElementById(i + 1).disabled = false;
+            document.getElementById(i + 1).innerText = "";
         }
     };
 
-    return { getClickedFieldId, makeBoardInDOM, saveButtonAfterClick, isWin, isDraw, resetGameBoard, boardButtons, assignPositionToClickedSquare };
+    return { getClickedFieldId, makeBoard, saveButtonAfterClick, isWin, isDraw, resetGameBoard, boardButtons, assignPositionToClickedSquare };
 }
-
 
 function field() {
     let value = 0;
@@ -147,23 +170,23 @@ function ruleSet() {
     return { players, activePlayer, swapActivePlayer };
 }
 
-
 const playGame = () => {
-    const displayPlayerTurn = document.getElementById("show-player-turn");
+    const displayPlayerTurn = DOMManipulation().displayTurnScreen;
     const board = gameBoard();
     const gameRules = ruleSet();
     let endGame = false;
     let endTurn = false;
     let turn = 1;
-    board.makeBoardInDOM();
+    board.makeBoard();
     const gameChart = board.boardButtons;
-    displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
 
+    const displayCurrentTurn = () => {
+        displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+    };
 
     const playTurn = (position) => {
-        displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+        displayCurrentTurn();
         gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
-
         gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
         gameRules.activePlayer().fieldsMarked.sort();
         console.log(`${gameRules.activePlayer().name} has: ${gameRules.activePlayer().fieldsMarked}`); // delete
@@ -171,17 +194,20 @@ const playGame = () => {
         document.getElementById(position).disabled = true;
     }
 
+    displayCurrentTurn();
     const handleButtonClickCallback = () => {
         let position = board.assignPositionToClickedSquare();
         if (gameChart[position - 1].field.getValue() === 0) {
             playTurn(position);
             if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
                 console.log("WIN")
+                console.log(gameRules.activePlayer().name)
+                DOMManipulation().displayTheWinner();
             } else if (board.isDraw(gameChart)) {
                 console.log("IT'S DRAW");
             } else {
                 gameRules.swapActivePlayer();
-                displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+                displayCurrentTurn();
                 console.log("NO")
             }
         }
@@ -189,50 +215,5 @@ const playGame = () => {
     board.saveButtonAfterClick(handleButtonClickCallback);
 
 };
+
 const gameOn = playGame();
-
-
-
-
-// if (endGame) {
-//     if (board.checkFreeField(position)) {
-//         gameChart[position - 1].placePlayerMark(gameRules.activePlayer());
-//         gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].id);
-//         console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
-
-//         if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
-//             console.log(`${gameRules.activePlayer().name} WINS`);
-//             endGame = true;
-//         } else if (board.isDraw(gameChart)) {
-//             console.log("IT'S A DRAW");
-//             endGame = true;
-//         } else {
-//             gameRules.swapActivePlayer();
-//             turn++;
-//             displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
-//             board.printBoard();
-//         }
-//     }
-// }
-// };
-
-
-// console.log(`TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `);
-// board.printBoard();
-
-// if (board.checkFreeField(position)) {
-//     const [row, column] = position;
-//     gameChart[row][column].placePlayerMark(gameRules.activePlayer());
-//     gameRules.activePlayer().fieldsMarked.push(gameChart[row][column].id);
-//     console.log(`THE ID OF TAKEN FIELD IS STORED IN ${gameRules.activePlayer().name} ARRAY AND IT'S: ${gameRules.activePlayer().fieldsMarked}`);
-// };
-// if (board.isWin(gameRules.activePlayer().fieldsMarked.sort())) {
-//     (console.log(`${gameRules.activePlayer().name} WINS`));
-//     endGame = false;
-//     break
-// } else if (board.isDraw(gameChart)) {
-//     console.log("IT'S A DRAW");
-//     endGame = false;
-//     break;
-// };
-
