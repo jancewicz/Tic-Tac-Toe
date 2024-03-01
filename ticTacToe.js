@@ -3,23 +3,23 @@ function DOMManipulation() {
     let createButton = document.createElement("button");
     const squares = document.querySelectorAll(".square");
     const displayTurnScreen = document.getElementById("show-player-turn");
-    const closeModalButton = document.getElementById("close-modal");
-    const resetModalButton = document.getElementById("reset-modal");
+    const gameResult = document.getElementById("game-result");
 
-    closeModalButton.addEventListener("click", function () {
-        document.getElementById("overlay").style.display = "none";
-    })
-
-    resetModalButton.addEventListener("click", () => {
-        document.getElementById("overlay").style.display = "none";
-        gameBoard().resetGameBoard(gameBoard().boardButtons);
-    })
-
-    const displayTheWinner = () => {
+    const displayModal = () => {
         document.getElementById("overlay").style.display = "flex";
     }
 
-    return { boardElement, createButton, squares, displayTurnScreen, displayTheWinner }
+    const displayTheWinner = (winner) => {
+        displayModal();
+        gameResult.innerText = `CONGRATULATIONS ${winner} WON THE GAME`;
+    };
+
+    const displayTheDraw = () => {
+        displayModal();
+        gameResult.innerText = "IT'S A DRAW!"
+    }
+
+    return { boardElement, createButton, squares, displayTurnScreen, displayTheWinner, displayTheDraw }
 }
 
 function gameBoard() {
@@ -100,15 +100,7 @@ function gameBoard() {
         return true;
     };
 
-    const resetGameBoard = () => {
-        for (let i = 0; i < boardButtons.length; i++) {
-            boardButtons[i].field.resetValue();
-            document.getElementById(i + 1).disabled = false;
-            document.getElementById(i + 1).innerText = "";
-        }
-    };
-
-    return { getClickedFieldId, makeBoard, saveButtonAfterClick, isWin, isDraw, resetGameBoard, boardButtons, assignPositionToClickedSquare };
+    return { getClickedFieldId, makeBoard, saveButtonAfterClick, isWin, isDraw, boardButtons, assignPositionToClickedSquare };
 }
 
 function field() {
@@ -139,20 +131,17 @@ function ruleSet() {
     const X = 1;
     const O = 2;
 
-    let fieldsMarkedP1 = [];
-    let fieldsMarkedP2 = [];
-
     const players = [
         {
             name: playerOne,
             mark: X,
-            fieldsMarked: fieldsMarkedP1,
+            fieldsMarked: [],
             markToAppendToHTML: "X"
         },
         {
             name: playerTwo,
             mark: O,
-            fieldsMarked: fieldsMarkedP2,
+            fieldsMarked: [],
             markToAppendToHTML: "O"
         }
     ];
@@ -167,21 +156,35 @@ function ruleSet() {
         activePlayerIndex = 1 - activePlayerIndex;
     };
 
-    return { players, activePlayer, swapActivePlayer };
+    const resetPlayerArray = () => {
+        players.forEach((player) => {
+            player.fieldsMarked = [];
+        })
+    };
+
+    return { players, activePlayer, swapActivePlayer, resetPlayerArray };
 }
 
 const playGame = () => {
     const displayPlayerTurn = DOMManipulation().displayTurnScreen;
     const board = gameBoard();
     const gameRules = ruleSet();
-    let endGame = false;
-    let endTurn = false;
-    let turn = 1;
     board.makeBoard();
     const gameChart = board.boardButtons;
+    const resetModalButton = document.getElementById("reset-modal");
+
+    resetModalButton.addEventListener("click", () => {
+        gameChart.forEach((element) => {
+            element.button.field.resetValue();
+            document.getElementById(element.button.field.id).innerText = ""
+            document.getElementById(element.button.field.id).disabled = false;
+            gameRules.resetPlayerArray();
+        })
+        document.getElementById("overlay").style.display = "none";
+    });
 
     const displayCurrentTurn = () => {
-        displayPlayerTurn.innerText = `TURN ${turn}! Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+        displayPlayerTurn.innerText = `Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
     };
 
     const playTurn = (position) => {
@@ -195,6 +198,7 @@ const playGame = () => {
     }
 
     displayCurrentTurn();
+
     const handleButtonClickCallback = () => {
         let position = board.assignPositionToClickedSquare();
         if (gameChart[position - 1].field.getValue() === 0) {
@@ -202,9 +206,9 @@ const playGame = () => {
             if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
                 console.log("WIN")
                 console.log(gameRules.activePlayer().name)
-                DOMManipulation().displayTheWinner();
+                DOMManipulation().displayTheWinner(gameRules.activePlayer().name);
             } else if (board.isDraw(gameChart)) {
-                console.log("IT'S DRAW");
+                DOMManipulation().displayTheDraw();
             } else {
                 gameRules.swapActivePlayer();
                 displayCurrentTurn();
@@ -212,8 +216,8 @@ const playGame = () => {
             }
         }
     };
-    board.saveButtonAfterClick(handleButtonClickCallback);
 
+    board.saveButtonAfterClick(handleButtonClickCallback);
 };
 
 const gameOn = playGame();

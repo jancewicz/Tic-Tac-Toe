@@ -25,7 +25,7 @@
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 #modal-upper-sector {
@@ -37,7 +37,7 @@
 #modal-lower-sector {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .header,
@@ -65,7 +65,6 @@
 #main {
     height: 82vh;
     width: 100%;
-    border: 3px solid red;
     display: flex;
     flex-direction: column;
     justify-content: center;
