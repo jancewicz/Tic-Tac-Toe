@@ -184,7 +184,7 @@ const playGame = () => {
     });
 
     const displayCurrentTurn = () => {
-        displayPlayerTurn.innerText = `Active player: ${gameRules.activePlayer().name}, mark: ${gameRules.activePlayer().mark} `;
+        displayPlayerTurn.innerText = `Active player: ${gameRules.activePlayer().markToAppendToHTML} `;
     };
 
     const playTurn = (position) => {
@@ -192,7 +192,6 @@ const playGame = () => {
         gameChart[position - 1].field.placePlayerMark(gameRules.activePlayer());
         gameRules.activePlayer().fieldsMarked.push(gameChart[position - 1].field.id);
         gameRules.activePlayer().fieldsMarked.sort();
-        console.log(`${gameRules.activePlayer().name} has: ${gameRules.activePlayer().fieldsMarked}`); // delete
         document.getElementById(position).innerText = gameRules.activePlayer().markToAppendToHTML;
         document.getElementById(position).disabled = true;
     }
@@ -204,15 +203,12 @@ const playGame = () => {
         if (gameChart[position - 1].field.getValue() === 0) {
             playTurn(position);
             if (board.isWin(gameRules.activePlayer().fieldsMarked)) {
-                console.log("WIN")
-                console.log(gameRules.activePlayer().name)
                 DOMManipulation().displayTheWinner(gameRules.activePlayer().name);
             } else if (board.isDraw(gameChart)) {
                 DOMManipulation().displayTheDraw();
             } else {
                 gameRules.swapActivePlayer();
                 displayCurrentTurn();
-                console.log("NO")
             }
         }
     };
@@ -220,4 +216,4 @@ const playGame = () => {
     board.saveButtonAfterClick(handleButtonClickCallback);
 };
 
-const gameOn = playGame();
+playGame();
